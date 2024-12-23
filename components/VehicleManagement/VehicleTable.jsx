@@ -14,7 +14,7 @@ const VehicleTable = ({ vehicleData, togglePopup }) => {
             <th className="border border-gray-300 px-4 py-2">Variant</th>
             <th className="border border-gray-300 px-4 py-2">Colour</th>
             <th className="border border-gray-300 px-4 py-2">Ex Showroom Price</th>
-            <th className="border border-gray-300 px-4 py-2">Exchange / Scrappage Discount</th>
+            {/* <th className="border border-gray-300 px-4 py-2">Exchange / Scrappage Discount</th> */}
             <th className="border border-gray-300 px-4 py-2">Corporate Offer Top @20</th>
             <th className="border border-gray-300 px-4 py-2">Corporate Offer @TOI</th>
             <th className="border border-gray-300 px-4 py-2">Additional Offer</th>
@@ -22,32 +22,32 @@ const VehicleTable = ({ vehicleData, togglePopup }) => {
             <th className="border border-gray-300 px-4 py-2">RTO Normal Scrap</th>
             <th className="border border-gray-300 px-4 py-2">RTO BH</th>
             <th className="border border-gray-300 px-4 py-2">RTO TRC</th>
-            <th className="border border-gray-300 px-4 py-2">Insurance</th>
+            {/* <th className="border border-gray-300 px-4 py-2">Insurance</th> */}
             <th className="border border-gray-300 px-4 py-2">Ins 11 Ads On</th>
-            <th className="border border-gray-300 px-4 py-2">Qty</th>
+            {/* <th className="border border-gray-300 px-4 py-2">Qty</th> */}
             <th className="border border-gray-300 px-4 py-2">Edit / Delete</th>
           </tr>
         </thead>
         <tbody>
           {vehicleData.map((vehicle, index) => (
             <tr key={index} className="odd:bg-white even:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{vehicle.srNo}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.manufacturingYear}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.vcCode}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.id}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.Manufacturing_Year}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.VC_Code}</td>
               <td className="border border-gray-300 px-4 py-2">{vehicle.ppl}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.fuel}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.fuel_type}</td>
               <td className="border border-gray-300 px-4 py-2">{vehicle.variant}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.colour}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.exShowroomPrice}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.exchangeDiscount}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.corporateOfferTop}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.corporateOfferToi}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.additionalOffer}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.rtoNormal}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.rtoNormalScrap}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.rtoBh}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.rtoTrc}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.insurance}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.color}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.Ex_Showroom_Price}</td>
+              {/* <td className="border border-gray-300 px-4 py-2">{vehicle.exchangeDiscount}</td> */}
+              <td className="border border-gray-300 px-4 py-2">{vehicle.Corporate_Offer_Top}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.Corporate_Offer}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.additional}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.RTO_Normal}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.RTO_Normal_scrap}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.RT_BH}</td>
+              <td className="border border-gray-300 px-4 py-2">{vehicle.RT_TRC}</td>
+              {/* <td className="border border-gray-300 px-4 py-2">{vehicle.insurance}</td> */}
               <td className="border border-gray-300 px-4 py-2 flex">
                 <button
                   onClick={togglePopup}
@@ -56,7 +56,7 @@ const VehicleTable = ({ vehicleData, togglePopup }) => {
                   View
                 </button>
               </td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.qty}</td>
+              {/* <td className="border border-gray-300 px-4 py-2">{vehicle.qty}</td> */}
               <td className="border border-gray-300 px-4 py-2">
                 <button className="text-blue-600 hover:underline mr-2">Edit</button>
                 <button className="text-red-600 hover:underline">Delete</button>

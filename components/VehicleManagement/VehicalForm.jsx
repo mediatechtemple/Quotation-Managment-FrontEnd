@@ -3,10 +3,11 @@ import React from "react";
 const VehicalForm = ({
   formData,
   onFieldChange,
-  onDynamicFieldChange,
-  onAddDynamicField,
   onSubmit,
   onCancel,
+  handleAddField,
+  handleDeleteField,
+  handleInputChange
 }) => {
   return (
     <div className="bg-white rounded shadow-lg w-full max-w-lg p-6 overflow-auto max-h-[80vh]">
@@ -16,15 +17,15 @@ const VehicalForm = ({
         <input
           type="number"
           placeholder="Manufacturing Year"
-          value={formData.manufacturingYear}
-          onChange={(e) => onFieldChange("manufacturingYear", e.target.value)}
+          value={formData.Manufacturing_Year}
+          onChange={(e) => onFieldChange("Manufacturing_Year", e.target.value)}
           className="border p-2 rounded w-full"
         />
         <input
           type="text"
           placeholder="VC Code"
-          value={formData.vcCode}
-          onChange={(e) => onFieldChange("vcCode", e.target.value)}
+          value={formData.VC_Code}
+          onChange={(e) => onFieldChange("VC_Code", e.target.value)}
           className="border p-2 rounded w-full"
         />
         <input
@@ -37,8 +38,8 @@ const VehicalForm = ({
         <input
           type="text"
           placeholder="Fuel"
-          value={formData.Fuel}
-          onChange={(e) => onFieldChange("Fuel", e.target.value)}
+          value={formData.fuel_type}
+          onChange={(e) => onFieldChange("fuel_type", e.target.value)}
           className="border p-2 rounded w-full"
         />
         <input
@@ -51,20 +52,20 @@ const VehicalForm = ({
         <input
           type="text"
           placeholder="Colour"
-          value={formData.colour}
-          onChange={(e) => onFieldChange("colour", e.target.value)}
+          value={formData.color}
+          onChange={(e) => onFieldChange("color", e.target.value)}
           className="border p-2 rounded w-full"
         />
         <input
           type="number"
           placeholder="Ex Showroom Price"
-          value={formData.exShowroomPrice}
+          value={formData.Ex_Showroom_Price}
           onChange={(e) =>
-            onFieldChange("exShowroomPrice", e.target.value)
+            onFieldChange("Ex_Showroom_Price", e.target.value)
           }
           className="border p-2 rounded w-full"
         />
-        <input
+        {/* <input
           type="number"
           placeholder="Exchange / Scrappage Discount"
           value={formData.exchangeDiscount}
@@ -72,60 +73,60 @@ const VehicalForm = ({
             onFieldChange("exchangeDiscount", e.target.value)
           }
           className="border p-2 rounded w-full"
-        />  
+        />   */}
         <input
           type="number"
           placeholder="Corporate Offer Top @20"
-          value={formData.corporateOfferTop}
+          value={formData.Corporate_Offer_Top}
           onChange={(e) =>
-            onFieldChange("corporateOfferTop", e.target.value)
+            onFieldChange("Corporate_Offer_Top", e.target.value)
           }
           className="border p-2 rounded w-full"
         />
         <input
           type="number"
           placeholder="Corporate Offer @TOI"
-          value={formData.corporateOfferToi}
+          value={formData.Corporate_Offer}
           onChange={(e) =>
-            onFieldChange("corporateOfferToi", e.target.value)
+            onFieldChange("Corporate_Offer", e.target.value)
           }
           className="border p-2 rounded w-full"
         />
         <input
           type="text"
           placeholder="Additional Offer"
-          value={formData.additionalOffer}
-          onChange={(e) => onFieldChange("additionalOffer", e.target.value)}
+          value={formData.additional}
+          onChange={(e) => onFieldChange("additional", e.target.value)}
           className="border p-2 rounded w-full"
         />
         <input
           type="number"
           placeholder="RTO Normal"
-          value={formData.rtoNormal}
-          onChange={(e) => onFieldChange("rtoNormal", e.target.value)}
+          value={formData.RTO_Normal}
+          onChange={(e) => onFieldChange("RTO_Normal", e.target.value)}
           className="border p-2 rounded w-full"
         />
         <input
           type="number"
           placeholder="RTO Normal Scrap"
-          value={formData.rtoNormalScrap}
+          value={formData.RTO_Normal_scrap}
           onChange={(e) =>
-            onFieldChange("rtoNormalScrap", e.target.value)
+            onFieldChange("RTO_Normal_scrap", e.target.value)
           }
           className="border p-2 rounded w-full"
         />
         <input
           type="number"
           placeholder="RTO BH"
-          value={formData.rtoBh}
-          onChange={(e) => onFieldChange("rtoBh", e.target.value)}
+          value={formData.RT_BH}
+          onChange={(e) => onFieldChange("RT_BH", e.target.value)}
           className="border p-2 rounded w-full"
         />
         <input
           type="number"
           placeholder="RTO TRC"
-          value={formData.rtoTrc}
-          onChange={(e) => onFieldChange("rtoTrc", e.target.value)}
+          value={formData.RT_TRC}
+          onChange={(e) => onFieldChange("RT_TRC", e.target.value)}
           className="border p-2 rounded w-full"
         />
         <input
@@ -142,40 +143,78 @@ const VehicalForm = ({
           onChange={(e) => onFieldChange("quantity", e.target.value)}
           className="border p-2 rounded w-full"
         />
+         <input
+          type="text"
+          placeholder="others1"
+          value={formData.other1}
+          onChange={(e) => onFieldChange("other1", e.target.value)}
+          className="border p-2 rounded w-full"
+        />
 
         {/* Dynamic Fields */}
         <h3 className="text-lg font-semibold">Ins 11 ads on</h3>
-        {formData.dynamicFields.map((field, index) => (
-          <div key={index} className="space-y-2">
-            <input
-              type="text"
-              placeholder="Name"
-              value={field.name}
-              onChange={(e) =>
-                onDynamicFieldChange(index, "name", e.target.value)
-              }
-              className="border p-2 rounded w-full"
-            />
-            <input
-              type="number"
-              placeholder="Amount"
-              value={field.amount}
-              onChange={(e) =>
-                onDynamicFieldChange(index, "amount", e.target.value)
-              }
-              className="border p-2 rounded w-full"
-            />
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={onAddDynamicField}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        >
-          Add More Fields
-        </button>
 
-        {/* Buttons */}
+
+    <button
+        onClick={handleAddField}
+        className="px-4 py-2 bg-blue-500 text-white rounded"
+      >
+        Add Field
+      </button>
+
+      {Object.keys(formData.insurance_details)
+        .filter((key) => key.startsWith("insurance")) // Only process "name" fields
+        .map((key, index) => {
+          const aboutKey = key.replace("insurance", "price"); // Get corresponding "about" field
+          const fieldNumber = key.replace("insurance", ""); // Extract number (e.g., 1, 2)
+
+          return (
+            <div key={index} className="flex space-x-2 items-center w-full">
+              <input
+                type="text"
+                placeholder={`Insurance ${fieldNumber}`}
+                value={formData.insurance_details[key]}
+                onChange={(e) =>
+                  handleInputChange(key, e.target.value)
+                }
+                className="border py-1 rounded"
+              />
+              <input
+                type="text"
+                placeholder={`Price ${fieldNumber}`}
+                value={formData.insurance_details[aboutKey]}
+                onChange={(e) =>
+                  handleInputChange(aboutKey, e.target.value)
+                }
+                className="border py-1 rounded"
+              />
+              <button
+                onClick={() => handleDeleteField(fieldNumber)}
+                className="py-1 px-1 bg-red-500 text-white rounded"
+              >
+                Delete
+              </button>
+            </div>
+          );
+        })}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
         <div className="flex justify-end space-x-4">
           <button
             type="button"

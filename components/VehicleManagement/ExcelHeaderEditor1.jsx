@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import Select from 'react-select';
 
-const ExcelHeaderEditor = () => {
+const ExcelHeaderEditor1 = () => {
   const [fileData, setFileData] = useState(null);
   const [headers, setHeaders] = useState([]);
   const [firstRow, setFirstRow] = useState([]);
@@ -12,9 +12,14 @@ const ExcelHeaderEditor = () => {
   const [updatedHeaders, setUpdatedHeaders] = useState([]);
 
 
-  
+
+
+
+
+
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
+    if (!file) return; // अगर फाइल सिलेक्ट नहीं है तो कुछ मत करो
     const reader = new FileReader();
 
     reader.onload = (event) => {
@@ -34,13 +39,16 @@ const ExcelHeaderEditor = () => {
       setFileData(sheetData);
       setIsPopupOpen(true);
 
-      
+      // Reset file input value to allow re-selection of the same file
+      e.target.value = null;
     };
 
     reader.readAsArrayBuffer(file);
   };
 
 
+
+  
 
 
   const handleHeaderChange = (index, newHeader) => {
@@ -49,73 +57,81 @@ const ExcelHeaderEditor = () => {
     setUpdatedHeaders(updated);
   };
 
-  // Static dropdown options
+
+
+
+
+
+
   const generateOptions = () => {
     return [
-      { value: 'SrNo', label: 'Sr No' },
-      { value: 'ManufacturingYear', label: 'Manufacturing Year' },
-      { value: 'VCCode', label: 'VC Code (8-12)' },
-      { value: 'PPL', label: 'PPL' },
-      { value: 'Fuel', label: 'Fuel' },
-      { value: 'Variant', label: 'Variant' },
-      { value: 'Colour', label: 'Colour' },
-      { value: 'ExShowroomPrice', label: 'Ex Showroom Price' },
-      { value: 'ExchangeScrappageDiscount', label: 'Exchange / Scrappage Discount' },
-      { value: 'CorporateOfferTop20', label: 'Corporate Offer Top @20' },
-      { value: 'CorporateOfferTOI', label: 'Corporate Offer @TOI' },
-      { value: 'AdditionalOffer', label: 'Additional Offer' },
-      { value: 'RTONormal', label: 'RTO Normal' },
-      { value: 'RTONormalScrap', label: 'RTO Normal Scrap' },
-      { value: 'RTOBH', label: 'RTO BH' },
-      { value: 'RTOTRC', label: 'RTO TRC' },
-      { value: 'Insurance', label: 'Insurance' },
-      // { value: 'Ins11AdsOn', label: 'Ins 11 Ads On' },
-      { value: 'Qty', label: 'Qty' },
-      // { value: 'EditDelete', label: 'Edit / Delete' },
+      { value: 'sr_no', label: 'Sr. No' },
+      { value: 'Manufacturing_Year', label: 'Manufacturing Year' },
+      { value: 'VC_Code', label: 'VC Code' },
+      { value: 'ppl', label: 'PPL' },
+      { value: 'fuel_type', label: 'Fuel Type' },
+      { value: 'variant', label: 'Variant' },
+      { value: 'Ex_Showroom_Price', label: 'Ex Showroom Price' },
+      { value: 'Corporate_Offer_Top', label: 'Corporate Offer Top' },
+      { value: 'additional', label: 'Additional' },
+      { value: 'RTO_Normal', label: 'RTO Normal' },
+      { value: 'Corporate_Offer', label: 'Corporate Offer' },
+      { value: 'other1', label: 'Other1' },
+      { value: 'RTO_Normal_scrap', label: 'RTO Normal Scrap' },
+      { value: 'RT_BH', label: 'RT BH' },
+      { value: 'RT_TRC', label: 'RT TRC' },
+      { value: 'insurance', label: 'Insurance' },
+      { value: 'quantity', label: 'Quantity' },
+      { value: 'color', label: 'Color' },
+      { value: 'insurance1', label: 'Insurance 1' },
+      { value: 'price1', label: 'Price 1' },
+      { value: 'insurance2', label: 'Insurance 2' },
+      { value: 'price2', label: 'Price 2' },
+      { value: 'insurance3', label: 'Insurance 3' },
+      { value: 'price3', label: 'Price 3' },
+      { value: 'insurance4', label: 'Insurance 4' },
+      { value: 'price4', label: 'Price 4' },
     ];
   };
-  
-  
 
-  // const handleDownload = () => {
-  //   if (!fileData) return;
 
-  //   const updatedData = [updatedHeaders, ...fileData.slice(1)];
-  //   const worksheet = XLSX.utils.aoa_to_sheet(updatedData);
-  //   const workbook = XLSX.utils.book_new();
 
-  //   XLSX.utils.book_append_sheet(workbook, worksheet, 'Updated Sheet');
-  //   XLSX.writeFile(workbook, 'UpdatedExcel.xlsx');
 
-  //   setIsPopupOpen(false);
-  // };
+
+
+
   const handleDownload = async () => {
+    const vc_code='vc_code'
     if (!fileData) return;
-  
-    // 1. Prepare the updated Excel file
+
     const updatedData = [updatedHeaders, ...fileData.slice(1)];
+    console.log(updatedData[0]);
+
+
+    const exists = updatedData[0].some((item) => new RegExp(`^${vc_code}$`, 'i').test(item));
+    if(!exists){
+      alert('bro you can\'t upload this file');
+      return;
+    }
     const worksheet = XLSX.utils.aoa_to_sheet(updatedData);
     const workbook = XLSX.utils.book_new();
-  
+
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Updated Sheet');
-  
-    // 2. Convert workbook to Blob
+
     const excelBlob = new Blob(
       [XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })],
       { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
     );
-  
-    // 3. Prepare FormData
+
     const formData = new FormData();
-    formData.append('excelFile', excelBlob, 'UpdatedExcel.xlsx'); // Attach file with name
-  
-    // 4. Send file to API
+    formData.append('excelFile', excelBlob, 'UpdatedExcel.xlsx');
+
     try {
       const response = await fetch('https://quotationlocal.onrender.com/api/model/excel', {
         method: 'POST',
         body: formData,
       });
-  
+
       if (response.ok) {
         console.log('File uploaded successfully');
       } else {
@@ -124,91 +140,31 @@ const ExcelHeaderEditor = () => {
     } catch (error) {
       console.error('Error uploading file:', error);
     }
-  
-    // 5. Close popup
+
     setIsPopupOpen(false);
   };
-  
 
-  // const handleDownload = async () => {
-  //   if (!fileData) return;
-  
-  //   // Create the updated data with headers and first row
-  //   const updatedData = [updatedHeaders, ...fileData.slice(1)];
-  
-  //   try {
-  //     // Prepare the data to send
-  //     const payload = {
-  //       headers: updatedHeaders,
-  //       data: updatedData,
-  //     };
-  
-  //     // Send POST request to API
-  //     const response = await fetch('https://quotationlocal.onrender.com/api/model/excel', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({excelFile:payload}),
-  //     });
-  
-  //     // Handle the response from the API
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       alert('File data has been successfully submitted!');
-  //       setIsPopupOpen(false);
-  //     } else {
-  //       alert('Failed to submit data. Please try again.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error submitting data:', error);
-  //     alert('Error submitting data. Please check the console for details.');
-  //   }
-  // };
-  
-  // const handleDownload = async () => {
-  //   if (!fileData) return;
-  
-  //   // Create the updated data with headers and first row
-  //   const updatedData = [updatedHeaders, ...fileData.slice(1)];
-  
-  //   try {
-  //     // Prepare the FormData object
-  //     const formData = new FormData();
-      
-  //     // You can append the updated data (in JSON format) to the FormData
-  //     // Convert updated data to a JSON string
-  //     const payload = JSON.stringify({
-  //       headers: updatedHeaders,
-  //       data: updatedData,
-  //     });
-  
-  //     // Append the JSON data to FormData
-  //     formData.append('excelFile', new Blob([payload], { type: 'application/json' }), 'updatedExcel.json');
-  
-  //     // Send POST request to the API with FormData
-  //     const response = await fetch('https://quotationlocal.onrender.com/api/model/excel', {
-  //       method: 'POST',
-  //       body: formData, // Send the FormData with the updated data
-  //     });
-  
-  //     // Handle the response from the API
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       alert('File data has been successfully submitted!');
-  //       setIsPopupOpen(false);
-  //     } else {
-  //       alert('Failed to submit data. Please try again.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error submitting data:', error);
-  //     alert('Error submitting data. Please check the console for details.');
-  //   }
-  // };
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
-    <div className="p-4 border-2 border-red-500">
+    <div className="p-4">
       <button
         className="px-4 py-2 bg-blue-500 text-white rounded"
         onClick={() => document.getElementById('fileInput').click()}
@@ -244,7 +200,7 @@ const ExcelHeaderEditor = () => {
                       <td className="border px-2 py-1">{firstRow[index] || 'N/A'}</td>
                       <td className="border px-2 py-1">
                         <Select
-                          options={generateOptions()} // Use static options
+                          options={generateOptions()}
                           value={{
                             value: updatedHeaders[index],
                             label: updatedHeaders[index],
@@ -271,7 +227,7 @@ const ExcelHeaderEditor = () => {
                 className="px-4 py-2 bg-green-500 text-white rounded"
                 onClick={handleDownload}
               >
-                Download Updated Excel
+                Save
               </button>
             </div>
           </div>
@@ -281,4 +237,4 @@ const ExcelHeaderEditor = () => {
   );
 };
 
-export default ExcelHeaderEditor;
+export default ExcelHeaderEditor1;

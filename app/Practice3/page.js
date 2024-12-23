@@ -11,10 +11,9 @@ const ExcelHeaderEditor = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [updatedHeaders, setUpdatedHeaders] = useState([]);
 
-
-  
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
+    if (!file) return; // अगर फाइल सिलेक्ट नहीं है तो कुछ मत करो
     const reader = new FileReader();
 
     reader.onload = (event) => {
@@ -34,14 +33,12 @@ const ExcelHeaderEditor = () => {
       setFileData(sheetData);
       setIsPopupOpen(true);
 
-      
+      // Reset file input value to allow re-selection of the same file
+      e.target.value = null;
     };
 
     reader.readAsArrayBuffer(file);
   };
-
-
-
 
   const handleHeaderChange = (index, newHeader) => {
     const updated = [...updatedHeaders];
@@ -49,7 +46,6 @@ const ExcelHeaderEditor = () => {
     setUpdatedHeaders(updated);
   };
 
-  // Static dropdown options
   const generateOptions = () => {
     return [
       { value: 'SrNo', label: 'Sr No' },
@@ -69,53 +65,33 @@ const ExcelHeaderEditor = () => {
       { value: 'RTOBH', label: 'RTO BH' },
       { value: 'RTOTRC', label: 'RTO TRC' },
       { value: 'Insurance', label: 'Insurance' },
-      // { value: 'Ins11AdsOn', label: 'Ins 11 Ads On' },
       { value: 'Qty', label: 'Qty' },
-      // { value: 'EditDelete', label: 'Edit / Delete' },
     ];
   };
-  
-  
 
-  // const handleDownload = () => {
-  //   if (!fileData) return;
-
-  //   const updatedData = [updatedHeaders, ...fileData.slice(1)];
-  //   const worksheet = XLSX.utils.aoa_to_sheet(updatedData);
-  //   const workbook = XLSX.utils.book_new();
-
-  //   XLSX.utils.book_append_sheet(workbook, worksheet, 'Updated Sheet');
-  //   XLSX.writeFile(workbook, 'UpdatedExcel.xlsx');
-
-  //   setIsPopupOpen(false);
-  // };
   const handleDownload = async () => {
     if (!fileData) return;
-  
-    // 1. Prepare the updated Excel file
+
     const updatedData = [updatedHeaders, ...fileData.slice(1)];
     const worksheet = XLSX.utils.aoa_to_sheet(updatedData);
     const workbook = XLSX.utils.book_new();
-  
+
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Updated Sheet');
-  
-    // 2. Convert workbook to Blob
+
     const excelBlob = new Blob(
       [XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })],
       { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
     );
-  
-    // 3. Prepare FormData
+
     const formData = new FormData();
-    formData.append('excelFile', excelBlob, 'UpdatedExcel.xlsx'); // Attach file with name
-  
-    // 4. Send file to API
+    formData.append('excelFile', excelBlob, 'UpdatedExcel.xlsx');
+
     try {
       const response = await fetch('https://quotationlocal.onrender.com/api/model/excel', {
         method: 'POST',
         body: formData,
       });
-  
+
       if (response.ok) {
         console.log('File uploaded successfully');
       } else {
@@ -124,88 +100,9 @@ const ExcelHeaderEditor = () => {
     } catch (error) {
       console.error('Error uploading file:', error);
     }
-  
-    // 5. Close popup
+
     setIsPopupOpen(false);
   };
-  
-
-  // const handleDownload = async () => {
-  //   if (!fileData) return;
-  
-  //   // Create the updated data with headers and first row
-  //   const updatedData = [updatedHeaders, ...fileData.slice(1)];
-  
-  //   try {
-  //     // Prepare the data to send
-  //     const payload = {
-  //       headers: updatedHeaders,
-  //       data: updatedData,
-  //     };
-  
-  //     // Send POST request to API
-  //     const response = await fetch('https://quotationlocal.onrender.com/api/model/excel', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({excelFile:payload}),
-  //     });
-  
-  //     // Handle the response from the API
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       alert('File data has been successfully submitted!');
-  //       setIsPopupOpen(false);
-  //     } else {
-  //       alert('Failed to submit data. Please try again.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error submitting data:', error);
-  //     alert('Error submitting data. Please check the console for details.');
-  //   }
-  // };
-  
-  // const handleDownload = async () => {
-  //   if (!fileData) return;
-  
-  //   // Create the updated data with headers and first row
-  //   const updatedData = [updatedHeaders, ...fileData.slice(1)];
-  
-  //   try {
-  //     // Prepare the FormData object
-  //     const formData = new FormData();
-      
-  //     // You can append the updated data (in JSON format) to the FormData
-  //     // Convert updated data to a JSON string
-  //     const payload = JSON.stringify({
-  //       headers: updatedHeaders,
-  //       data: updatedData,
-  //     });
-  
-  //     // Append the JSON data to FormData
-  //     formData.append('excelFile', new Blob([payload], { type: 'application/json' }), 'updatedExcel.json');
-  
-  //     // Send POST request to the API with FormData
-  //     const response = await fetch('https://quotationlocal.onrender.com/api/model/excel', {
-  //       method: 'POST',
-  //       body: formData, // Send the FormData with the updated data
-  //     });
-  
-  //     // Handle the response from the API
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       alert('File data has been successfully submitted!');
-  //       setIsPopupOpen(false);
-  //     } else {
-  //       alert('Failed to submit data. Please try again.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error submitting data:', error);
-  //     alert('Error submitting data. Please check the console for details.');
-  //   }
-  // };
-  
 
   return (
     <div className="p-4 border-2 border-red-500">
@@ -244,7 +141,7 @@ const ExcelHeaderEditor = () => {
                       <td className="border px-2 py-1">{firstRow[index] || 'N/A'}</td>
                       <td className="border px-2 py-1">
                         <Select
-                          options={generateOptions()} // Use static options
+                          options={generateOptions()}
                           value={{
                             value: updatedHeaders[index],
                             label: updatedHeaders[index],
