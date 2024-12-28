@@ -1,4 +1,6 @@
 "use client";
+import Filter from "@/components/Filters/filter";
+import useFilters from "@/components/Filters/useFilters";
 import ExcelHeaderEditor from "@/components/VehicleManagement/ExcelHeaderEditor";
 import ExcelHeaderEditor1 from "@/components/VehicleManagement/ExcelHeaderEditor1";
 import Popup from "@/components/VehicleManagement/Popup";
@@ -6,59 +8,15 @@ import VehicalForm from "@/components/VehicleManagement/VehicalForm";
 import VehicleTable from "@/components/VehicleManagement/VehicleTable";
 import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-// const vehicleData = [
-//   {
-//     sr_no: 1,
-//     Manufacturing_Year: "2023",
-//     VC_Code: "VC123",
-//     ppl: "8-12",
-//     fuel_type: "Petrol",
-//     variant: "XLE",
-//     Ex_Showroom_Price: 1000,
-//     Corporate_Offer_Top: 3,
-//     additional: 3,
-//     RTO_Normal: 20,
-//     Corporate_Offer: 50,
-//     other1: 1000,
-//     RTO_Normal_scrap: 90,
-//     RT_BH: 30,
-//     RT_TRC: 30,
-//     // insurance: '50,000',
-//     quantity: 1,
-//     color: "Red",
-//     insurance1: 3,
-//     price1: 10,
-//     insurance2: 30,
-//     price2: 33,
-//     insurance3: 4,
-//     price3: 4,
-//     insurance4: "8,000",
-//     price4: 98,
-//   },
-//   // Add more rows as needed
-// ];
+import apiService from "@/service/apiServices";
 
-const data1 = [
-  { id: 1, name: "John Doe", amount: 250 },
-  { id: 2, name: "Jane Smith", amount: 300 },
-  { id: 3, name: "Alice Johnson", amount: 150 },
-  { id: 4, name: "Bob Brown", amount: 400 },
-  { id: 5, name: "Charlie Davis", amount: 200 },
-];
-
-const data = [
-  { id: 1, name: "John Doe", amount: 250 },
-  { id: 2, name: "Jane Smith", amount: 300 },
-  { id: 3, name: "Alice Johnson", amount: 150 },
-  { id: 4, name: "Bob Brown", amount: 400 },
-  { id: 5, name: "Charlie Davis", amount: 200 },
-];
 
 const PopupForm = () => {
   const [vehicleData, setVehicleData] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [fields, setFields] = useState([{ name: "", amount: "" }]);
+  const [viewData,setViewData]=useState({});
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [fieldCount, setFieldCount] = useState(1);
@@ -84,6 +42,18 @@ const PopupForm = () => {
     color: "11",
     insurance_details: { insurance1: "11", price1: 11 }, // Initial insurance_details
   });
+  
+
+  const { filteredData, updateFilter } = useFilters(vehicleData, {
+    Search: { type: 'text', value: '' },
+    name: { type: 'text', value: '' },
+    age: { type: 'range', value: [0, 100] },
+    city: { type: 'dropdown', value: '', options: ['New York', 'Los Angeles', 'Chicago'] },
+    createdAt: { type: 'dateRange', value: [null, null] },
+    department: { type: 'dropdown', value: '', options: ['HR', 'IT', 'Finance'] },
+    status: { type: 'checkbox', value: null }, 
+  });
+
 
   const handleAddField = () => {
     const newCount = fieldCount + 1;
@@ -99,6 +69,11 @@ const PopupForm = () => {
     console.log(formData);
   };
 
+
+  useEffect(()=>{
+    console.log(formData);
+  },[formData])
+
   // Delete specific fields
   const handleDeleteField = (fieldKey) => {
     const updatedFields = { ...formData.insurance_details };
@@ -109,6 +84,7 @@ const PopupForm = () => {
 
   // Handle input changes
   const handleInputChange = (fieldKey, value) => {
+    console.log(typeof value);
     setFormData({
       ...formData,
       insurance_details: {
@@ -126,11 +102,150 @@ const PopupForm = () => {
     }));
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Data Submitted:", formData);
+  const fetchData = async () => {
+    // setLoading(true);
+    try {
+      const response = await apiService.get('api/model');
+      setVehicleData(response.data);
+    } catch (err) {
+      // setError(err.message);
+      console.log(err)
+    } finally {
+      // setLoading(false);
+    }
   };
+
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // const getData = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "https://quotationlocal.onrender.com/api/model"
+  //     );
+  //     const data = await response.json();
+  //     console.log(data.data);
+  //     setVehicleData(data.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+
+// const handleSubmit=(e)=>{
+//   e.preventDefault();
+//   console.log(formData);
+// }
+
+
+
+
+
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Create a new FormData instance
+    const data = new FormData();
+
+    // Append all key-value pairs to FormData
+    Object.keys(formData).forEach((key) => {
+      // Handle nested objects (like `insurance_details`) if necessary
+      if (typeof formData[key] === "object" && !Array.isArray(formData[key])) {
+        // Object.keys(formData[key]).forEach((nestedKey) => {
+        //   data.append(`${key}[${nestedKey}]`, formData[key][nestedKey]);
+        // });
+        const jsonString = JSON.stringify(formData[key]);
+        data.append(key,jsonString);
+
+      } else {
+        data.append(key, formData[key]);
+      }
+    });
+
+    console.log([...data.entries()]);
+
+    try {
+      const response = await fetch("https://quotationlocal.onrender.com/api/model", {
+        method: "POST",
+        body: data, // Send FormData directly
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to post data");
+      }
+
+      const result = await response.json();
+      console.log("Data submitted successfully:", result);
+      getData();
+      setShowPopup(false);
+    } catch (error) {
+      console.log("Error submitting data:", error.message);
+    }
+  };
+
+
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+
+//   // Create a new FormData instance
+//   const data = new FormData();
+
+//   //  Append all key-value pairs to FormData
+//     Object.keys(formData).forEach((key) => {
+//       // Handle nested objects (like `insurance_details`) if necessary
+//       if (typeof formData[key] === "object" && !Array.isArray(formData[key])) {
+//         Object.keys(formData[key]).forEach((nestedKey) => {
+//           data.append(`${key}[${nestedKey}]`, formData[key][nestedKey]);
+//         });
+//       } else {
+//         data.append(key, formData[key]);
+//       }
+//     });
+
+//   try {
+//     // Use apiService.post to send the FormData
+//     const result = await apiService.post('api/model', data);
+
+//     console.log("Data submitted successfully:", result);
+//     getData(); // Refresh the data (assumes this function is defined elsewhere)
+//     setShowPopup(false); // Close the popup
+//   } catch (error) {
+//     console.log("Error submitting data:", error.message);
+//   }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // Handle form cancellation
   const handleCancel = () => {
@@ -159,45 +274,30 @@ const PopupForm = () => {
     setShowPopup(false);
   };
 
-  const togglePopup = () => {
+
+
+  const togglePopup = (data) => {
+    setViewData(data);
     setIsPopupOpen(!isPopupOpen);
   };
 
   const exportToExcel = (data) => {
-    console.log(data);
-    // alert('Hell broher');
-    // return;
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Table Data");
     XLSX.writeFile(workbook, "table_data.xlsx");
   };
 
-  const importFromExcel = (e) => {
-    const file = e.target.files[0];
-    alert("From here excel file get uploaded!");
-  };
-
+  
   const handleTogglePopup = () => {
     setShowPopup(!showPopup);
   };
 
-  const getData = async () => {
-    try {
-      const response = await fetch(
-        "https://quotationlocal.onrender.com/api/model"
-      );
-      const data = await response.json();
-      console.log(data.data);
-      setVehicleData(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -229,7 +329,20 @@ const PopupForm = () => {
         </div>
       </div>
 
-      <VehicleTable vehicleData={vehicleData} togglePopup={togglePopup} />
+      <Filter
+        filters={{
+          status: { type: 'checkbox',level:'Status' },
+          Search: { type: 'text', value: '',level:'Search' }, // Overall search filter
+          // name: { type: 'text' },
+          // age: { type: 'range' },
+          // city: { type: 'dropdown', options: ['New York', 'Los Angeles', 'Chicago'] },
+          createdAt: { type: 'dateRange',level:'Date Range' },
+          // department: { type: 'dropdown', options: ['HR', 'IT', 'Finance'] },
+        }}
+        onFilterChange={updateFilter}
+      />
+
+      <VehicleTable vehicleData={filteredData} togglePopup={togglePopup} />
       {/* Table */}
 
       {/* Popup Form */}
@@ -238,7 +351,7 @@ const PopupForm = () => {
           <VehicalForm
             formData={formData}
             onFieldChange={handleFieldChange}
-            onSubmit={handleSubmit}
+            handleSubmit={handleSubmit}
             onCancel={handleCancel}
             handleAddField={handleAddField}
             handleDeleteField={handleDeleteField}
@@ -247,7 +360,7 @@ const PopupForm = () => {
         </div>
       )}
 
-      {isPopupOpen && <Popup data={data} onClose={togglePopup} />}
+      {isPopupOpen && <Popup data={viewData} onClose={togglePopup} />}
     </div>
   );
 };

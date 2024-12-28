@@ -3,7 +3,7 @@ import React from "react";
 const VehicalForm = ({
   formData,
   onFieldChange,
-  onSubmit,
+  handleSubmit,
   onCancel,
   handleAddField,
   handleDeleteField,
@@ -12,7 +12,7 @@ const VehicalForm = ({
   return (
     <div className="bg-white rounded shadow-lg w-full max-w-lg p-6 overflow-auto max-h-[80vh]">
       <h2 className="text-xl font-semibold mb-4">Vehicle Details Form</h2>
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Static Fields */}
         <input
           type="number"
@@ -156,6 +156,7 @@ const VehicalForm = ({
 
 
     <button
+        type="button"
         onClick={handleAddField}
         className="px-4 py-2 bg-blue-500 text-white rounded"
       >
@@ -180,11 +181,11 @@ const VehicalForm = ({
                 className="border py-1 rounded"
               />
               <input
-                type="text"
+                type="number"
                 placeholder={`Price ${fieldNumber}`}
                 value={formData.insurance_details[aboutKey]}
                 onChange={(e) =>
-                  handleInputChange(aboutKey, e.target.value)
+                  handleInputChange(aboutKey, +e.target.value)
                 }
                 className="border py-1 rounded"
               />

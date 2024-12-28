@@ -2,6 +2,7 @@
 import React from "react";
 
 const Popup = ({ data, onClose }) => {
+  console.log(data);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded shadow-lg w-1/3">
@@ -16,8 +17,8 @@ const Popup = ({ data, onClose }) => {
           <tbody>
             {data.map((item) => (
               <tr key={item.id}>
-                <td className="border border-gray-300 px-4 py-2">{item.name}</td>
-                <td className="border border-gray-300 px-4 py-2">${item.amount}</td>
+                <td className="border border-gray-300 px-4 py-2">{item.insurance_Name}</td>
+                <td className="border border-gray-300 px-4 py-2">₹{item.price}</td>
               </tr>
             ))}
           </tbody>
