@@ -24,6 +24,8 @@ const VehicleTable = ({ vehicleData, togglePopup }) => {
             <th className="border border-gray-300 px-4 py-2">RTO TRC</th>
             {/* <th className="border border-gray-300 px-4 py-2">Insurance</th> */}
             <th className="border border-gray-300 px-4 py-2">Ins 11 Ads On</th>
+            <th className="border border-gray-300 px-4 py-2">Accessries</th>
+            <th className="border border-gray-300 px-4 py-2">Vas</th>
             {/* <th className="border border-gray-300 px-4 py-2">Qty</th> */}
             <th className="border border-gray-300 px-4 py-2">Edit / Delete</th>
           </tr>
@@ -48,14 +50,31 @@ const VehicleTable = ({ vehicleData, togglePopup }) => {
               <td className="border border-gray-300 px-4 py-2">{vehicle.RT_BH}</td>
               <td className="border border-gray-300 px-4 py-2">{vehicle.RT_TRC}</td>
               {/* <td className="border border-gray-300 px-4 py-2">{vehicle.insurance}</td> */}
-              <td className="border border-gray-300 px-4 py-2 flex">
+              <td className="border border-gray-300 px-4 py-2">
                 <button
-                  onClick={()=>togglePopup(vehicle.insurances)}
+                  onClick={()=>togglePopup(vehicle.insurances,'insurance')}
                   className="px-4 w-32 py-2 bg-blue-600 mr-2 text-white rounded hover:bg-blue-700"
                 >
-                  View
+                  Insurance
                 </button>
               </td>
+              <td className="border border-gray-300 px-4 py-2">
+                <button
+                  onClick={()=>togglePopup(vehicle.accessories,'accessories')}
+                  className="px-4 w-32 py-2 bg-blue-600 mr-2 text-white rounded hover:bg-blue-700"
+                >
+                  Accessories
+                </button>
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                <button
+                  onClick={()=>togglePopup(vehicle.vas,'vas')}
+                  className="px-4 w-32 py-2 bg-blue-600 mr-2 text-white rounded hover:bg-blue-700"
+                >
+                  Vas
+                </button>
+              </td>
+              {/* <td className="border border-gray-300 px-4 py-2">{vehicle.qty}</td> */}
               {/* <td className="border border-gray-300 px-4 py-2">{vehicle.qty}</td> */}
               <td className="border border-gray-300 px-4 py-2">
                 <button className="text-blue-600 hover:underline mr-2">Edit</button>

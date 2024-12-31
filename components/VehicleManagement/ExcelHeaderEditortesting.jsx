@@ -20,6 +20,8 @@ const ExcelHeaderEditor1 = () => {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return; // अगर फाइल सिलेक्ट नहीं है तो कुछ मत करो
+
+    
     const reader = new FileReader();
 
     reader.onload = (event) => {
@@ -135,7 +137,7 @@ const ExcelHeaderEditor1 = () => {
       if (response.ok) {
         console.log('File uploaded successfully');
       } else {
-        console.log('File upload failed:', await response.text());
+        console.error('File upload failed:', await response.text());
       }
     } catch (error) {
       console.error('Error uploading file:', error);

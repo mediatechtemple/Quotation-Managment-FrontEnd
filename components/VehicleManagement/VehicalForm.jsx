@@ -7,7 +7,13 @@ const VehicalForm = ({
   onCancel,
   handleAddField,
   handleDeleteField,
-  handleInputChange
+  handleInputChange,
+  handleAddAccessories,
+  handleAddVas,
+  handleAccChange,
+  handleVasChange,
+  handleDeleteAcc,
+  handleDeleteVas
 }) => {
   return (
     <div className="bg-white rounded shadow-lg w-full max-w-lg p-6 overflow-auto max-h-[80vh]">
@@ -152,7 +158,7 @@ const VehicalForm = ({
         />
 
         {/* Dynamic Fields */}
-        <h3 className="text-lg font-semibold">Ins 11 ads on</h3>
+        {/* <h3 className="text-lg font-semibold">Ins 11 ads on</h3> */}
 
 
     <button
@@ -160,7 +166,7 @@ const VehicalForm = ({
         onClick={handleAddField}
         className="px-4 py-2 bg-blue-500 text-white rounded"
       >
-        Add Field
+        Add Insurance
       </button>
 
       {Object.keys(formData.insurance_details)
@@ -198,6 +204,100 @@ const VehicalForm = ({
             </div>
           );
         })}
+
+
+
+      <button
+        type="button"
+        onClick={handleAddAccessories}
+        className="px-4 py-2 bg-blue-500 text-white rounded"
+      >
+        Add Accessories
+      </button>
+
+
+      {Object.keys(formData.Accessories)
+        .filter((key) => key.startsWith("accessories_name")) // Only process "name" fields
+        .map((key, index) => {
+          const aboutKey = key.replace("accessories_name", "accessories_price"); // Get corresponding "about" field
+          const fieldNumber = key.replace("accessories_name", ""); // Extract number (e.g., 1, 2)
+
+          return (
+            <div key={index} className="flex space-x-2 items-center w-full">
+              <input
+                type="text"
+                placeholder={`accessories_name ${fieldNumber}`}
+                value={formData.Accessories[key]}
+                onChange={(e) =>
+                  handleAccChange(key, e.target.value)
+                }
+                className="border py-1 rounded"
+              />
+              <input
+                type="number"
+                placeholder={`accessories_price ${fieldNumber}`}
+                value={formData.Accessories[aboutKey]}
+                onChange={(e) =>
+                  handleAccChange(aboutKey, +e.target.value)
+                }
+                className="border py-1 rounded"
+              />
+              <button
+                onClick={() => handleDeleteAcc(fieldNumber)}
+                className="py-1 px-1 bg-red-500 text-white rounded"
+              >
+                Delete
+              </button>
+            </div>
+          );
+        })}
+
+
+      <button
+        type="button"
+        onClick={handleAddVas}
+        className="px-4 py-2 bg-blue-500 text-white rounded block"
+      >
+        Add VAS
+      </button>
+
+
+      {Object.keys(formData.VAS_data)
+        .filter((key) => key.startsWith("VAS_Name")) // Only process "name" fields
+        .map((key, index) => {
+          const aboutKey = key.replace("VAS_Name", "VAS_price"); // Get corresponding "about" field
+          const fieldNumber = key.replace("VAS_Name", ""); // Extract number (e.g., 1, 2)
+
+          return (
+            <div key={index} className="flex space-x-2 items-center w-full">
+              <input
+                type="text"
+                placeholder={`VAS_Name ${fieldNumber}`}
+                value={formData.VAS_data[key]}
+                onChange={(e) =>
+                  handleVasChange(key, e.target.value)
+                }
+                className="border py-1 rounded"
+              />
+              <input
+                type="number"
+                placeholder={`VAS_price ${fieldNumber}`}
+                value={formData.VAS_data[aboutKey]}
+                onChange={(e) =>
+                  handleVasChange(aboutKey, +e.target.value)
+                }
+                className="border py-1 rounded"
+              />
+              <button
+                onClick={() => handleDeleteVas(fieldNumber)}
+                className="py-1 px-1 bg-red-500 text-white rounded"
+              >
+                Delete
+              </button>
+            </div>
+          );
+        })}
+
 
 
 

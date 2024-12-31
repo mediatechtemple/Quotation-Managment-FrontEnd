@@ -3,12 +3,14 @@ import Filter from "@/components/Filters/filter";
 import useFilters from "@/components/Filters/useFilters";
 import ExcelHeaderEditor from "@/components/VehicleManagement/ExcelHeaderEditor";
 import ExcelHeaderEditor1 from "@/components/VehicleManagement/ExcelHeaderEditor1";
-import Popup from "@/components/VehicleManagement/Popup";
+import Popup from "@/components/VehicleManagement/VehicalPopUp/Popup";
 import VehicalForm from "@/components/VehicleManagement/VehicalForm";
 import VehicleTable from "@/components/VehicleManagement/VehicleTable";
 import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import apiService from "@/service/apiServices";
+import AccPopUp from "@/components/VehicleManagement/VehicalPopUp/AccPopUp";
+import VasPopUp from "@/components/VehicleManagement/VehicalPopUp/VasPopUp";
 
 
 const PopupForm = () => {
@@ -20,6 +22,8 @@ const PopupForm = () => {
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [fieldCount, setFieldCount] = useState(1);
+  const [accCount, setAccCount] = useState(1);
+  const [vasCount, setVasCount] = useState(1);
 
   const [formData, setFormData] = useState({
     Manufacturing_Year: "1100",
@@ -41,6 +45,8 @@ const PopupForm = () => {
     quantity: "11",
     color: "11",
     insurance_details: { insurance1: "11", price1: 11 }, // Initial insurance_details
+    Accessories:{accessories_name1:'acc',accessories_price1:99},
+    VAS_data:{VAS_Name1:'vas',VAS_price1:88}
   });
   
 
@@ -70,6 +76,36 @@ const PopupForm = () => {
   };
 
 
+  const handleAddAccessories = () => {
+    const newCount = accCount + 1;
+    setFormData({
+      ...formData,
+      Accessories: {
+        ...formData.Accessories,
+        [`accessories_name${newCount}`]: "",
+        [`accessories_price${newCount}`]: "",
+      },
+    });
+    setAccCount(newCount);
+    console.log(formData);
+  };
+
+
+  const handleAddVas = () => {
+    const newCount = vasCount + 1;
+    setFormData({
+      ...formData,
+      VAS_data: {
+        ...formData.VAS_data,
+        [`VAS_Name${newCount}`]: "",
+        [`VAS_price${newCount}`]: "",
+      },
+    });
+    setVasCount(newCount);
+    console.log(formData);
+  };
+
+
   useEffect(()=>{
     console.log(formData);
   },[formData])
@@ -81,10 +117,21 @@ const PopupForm = () => {
     delete updatedFields[`price${fieldKey}`];
     setFormData({ ...formData, insurance_details: updatedFields });
   };
+  const handleDeleteAcc = (fieldKey) => {
+    const updatedFields = { ...formData.Accessories };
+    delete updatedFields[`accessories_name${fieldKey}`];
+    delete updatedFields[`accessories_price${fieldKey}`];
+    setFormData({ ...formData, Accessories: updatedFields });
+  };
+  const handleDeleteVas = (fieldKey) => {
+    const updatedFields = { ...formData.VAS_data };
+    delete updatedFields[`VAS_Name${fieldKey}`];
+    delete updatedFields[`VAS_price${fieldKey}`];
+    setFormData({ ...formData, VAS_data: updatedFields });
+  };
 
   // Handle input changes
   const handleInputChange = (fieldKey, value) => {
-    console.log(typeof value);
     setFormData({
       ...formData,
       insurance_details: {
@@ -93,6 +140,30 @@ const PopupForm = () => {
       },
     });
   };
+  const handleAccChange = (fieldKey, value) => {
+    console.log(typeof value);
+    setFormData({
+      ...formData,
+      Accessories: {
+        ...formData.Accessories,
+        [fieldKey]: value,
+      },
+    });
+  };
+  const handleVasChange = (fieldKey, value) => {
+    console.log(typeof value);
+    setFormData({
+      ...formData,
+      VAS_data: {
+        ...formData.VAS_data,
+        [fieldKey]: value,
+      },
+    });
+  };
+
+
+
+
 
   // Handle changes in static fields
   const handleFieldChange = (key, value) => {
@@ -102,10 +173,17 @@ const PopupForm = () => {
     }));
   };
 
+
+
+
+
+
+
   const fetchData = async () => {
     // setLoading(true);
     try {
       const response = await apiService.get('api/model');
+      console.log(response.data);
       setVehicleData(response.data);
     } catch (err) {
       // setError(err.message);
@@ -186,6 +264,9 @@ const PopupForm = () => {
       console.log("Error submitting data:", error.message);
     }
   };
+
+
+
 
 
 // const handleSubmit = async (e) => {
@@ -276,13 +357,40 @@ const PopupForm = () => {
 
 
 
-  const togglePopup = (data) => {
+  const togglePopup = (data,dataType) => {
+    // console.log(data);
+    // console.log(dataType);
     setViewData(data);
-    setIsPopupOpen(!isPopupOpen);
+    setIsPopupOpen(dataType);
+    
   };
 
   const exportToExcel = (data) => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
+    console.log(data);
+    const mapData=data.map((item,index)=>{
+
+      const result = item.insurances
+    .reduce((acc, curr, index) => {
+      acc[`insurance${index + 1}`] = curr.insurance;
+      acc[`price${index + 1}`] = curr.price;
+      return acc;
+    }, {});
+
+    // console.log(item.id);
+    delete item.insurances;
+    delete item.id;
+    
+    return {...item,...result,sr:index};
+    // console.log(item);
+      
+    });
+    // console.log('here man data will come..')
+    console.log(mapData);
+    return;
+    
+    
+
+    const worksheet = XLSX.utils.json_to_sheet(mapData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Table Data");
     XLSX.writeFile(workbook, "table_data.xlsx");
@@ -356,11 +464,19 @@ const PopupForm = () => {
             handleAddField={handleAddField}
             handleDeleteField={handleDeleteField}
             handleInputChange={handleInputChange}
+            handleAddAccessories={handleAddAccessories}
+            handleAddVas={handleAddVas}
+            handleAccChange={handleAccChange}
+            handleVasChange={handleVasChange}
+            handleDeleteAcc={handleDeleteAcc} 
+            handleDeleteVas={handleDeleteVas}
           />
         </div>
       )}
 
-      {isPopupOpen && <Popup data={viewData} onClose={togglePopup} />}
+      {isPopupOpen == 'insurance' && <Popup data={viewData} onClose={togglePopup} />}
+      {isPopupOpen ==  'accessories' && <AccPopUp data={viewData} onClose={togglePopup} />}
+      {isPopupOpen == 'vas'&& <VasPopUp data={viewData} onClose={togglePopup} />}
     </div>
   );
 };
