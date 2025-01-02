@@ -135,13 +135,13 @@ const VehicalForm = ({
           onChange={(e) => onFieldChange("RT_TRC", e.target.value)}
           className="border p-2 rounded w-full"
         />
-        <input
+        {/* <input
           type="number"
           placeholder="Insurance"
           value={formData.insurance}
           onChange={(e) => onFieldChange("insurance", e.target.value)}
           className="border p-2 rounded w-full"
-        />
+        /> */}
         <input
           type="number"
           placeholder="Quantity"

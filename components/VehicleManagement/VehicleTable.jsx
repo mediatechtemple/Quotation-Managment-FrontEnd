@@ -1,6 +1,7 @@
 import React from 'react';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
-const VehicleTable = ({ vehicleData, togglePopup }) => {
+const VehicleTable = ({ vehicleData, togglePopup,handleDelete,handleTogglePopup }) => {
   return (
     <div className="overflow-auto max-h-[80vh]">
       <table className="table-auto w-full border-collapse border border-gray-200 text-sm">
@@ -76,9 +77,26 @@ const VehicleTable = ({ vehicleData, togglePopup }) => {
               </td>
               {/* <td className="border border-gray-300 px-4 py-2">{vehicle.qty}</td> */}
               {/* <td className="border border-gray-300 px-4 py-2">{vehicle.qty}</td> */}
-              <td className="border border-gray-300 px-4 py-2">
-                <button className="text-blue-600 hover:underline mr-2">Edit</button>
-                <button className="text-red-600 hover:underline">Delete</button>
+              {/* <td className="border border-gray-300 px-4 py-2"> */}
+              <td className="border border-gray-300 px-4 py-2 space-x-4">
+       
+              <div className='flex'>
+              <button
+                  onClick={() => handleTogglePopup(vehicle)}
+                  className="text-green-500 hover:text-green-700 px-2"
+                  title="Edit"
+                >
+                  <FaEdit size={20} />
+                </button>
+                {/* Delete Button */}
+                <button
+                  onClick={() => handleDelete(vehicle.id)}
+                  className="text-red-500 hover:text-red-700 px-2"
+                  title="Delete"
+                >
+                  <FaTrash size={20} />
+                </button>
+              </div>
               </td>
             </tr>
           ))}

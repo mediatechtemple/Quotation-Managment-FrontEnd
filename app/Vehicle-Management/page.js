@@ -11,10 +11,12 @@ import * as XLSX from "xlsx";
 import apiService from "@/service/apiServices";
 import AccPopUp from "@/components/VehicleManagement/VehicalPopUp/AccPopUp";
 import VasPopUp from "@/components/VehicleManagement/VehicalPopUp/VasPopUp";
+import { transformData } from "@/utils/dataTransformer"
 
 
 const PopupForm = () => {
   const [vehicleData, setVehicleData] = useState([]);
+  const [editVehicaleData,setEditVehicleData]=useState({});
   const [showPopup, setShowPopup] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [fields, setFields] = useState([{ name: "", amount: "" }]);
@@ -24,6 +26,7 @@ const PopupForm = () => {
   const [fieldCount, setFieldCount] = useState(1);
   const [accCount, setAccCount] = useState(1);
   const [vasCount, setVasCount] = useState(1);
+
 
   const [formData, setFormData] = useState({
     Manufacturing_Year: "1100",
@@ -266,6 +269,40 @@ const PopupForm = () => {
   };
 
 
+  const handleEdit =async (item)=>{
+
+  }
+
+
+
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      // API Call for DELETE
+      const response = await fetch(`https://quotationlocal.onrender.com/api/model/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete the item.");
+      }
+
+      // Update the state to remove the deleted item
+      setVehicleData((prevData) => prevData.filter((item) => item.id !== id));
+
+      alert(`Item with ID ${id} deleted successfully!`);
+    } catch (error) {
+      console.error("Error while deleting:", error);
+      alert("Failed to delete the item. Please try again.");
+    }
+  };
+
+
 
 
 
@@ -376,17 +413,38 @@ const PopupForm = () => {
       return acc;
     }, {});
 
+    const result1 = item.accessories
+    .reduce((acc, curr, index) => {
+      acc[`accessories_name${index + 1}`] = curr.accessories_name;
+      acc[`accessories_price${index + 1}`] = curr.accessories_price;
+      return acc;
+    }, {});
+
+    const result2 = item.vas
+    .reduce((acc, curr, index) => {
+      acc[`VAS_Name${index + 1}`] = curr.VAS_Name;
+      acc[`VAS_price${index + 1}`] = curr.VAS_price;
+      return acc;
+    }, {});
+
+
+
     // console.log(item.id);
     delete item.insurances;
+    delete item.accessories;
+    delete item.vas
+
     delete item.id;
+    delete item.VAS_Id;
+    delete item.Insurance_Id;
     
-    return {...item,...result,sr:index};
+    return {...item,...result,...result1,...result2,sr:index};
     // console.log(item);
       
     });
     // console.log('here man data will come..')
-    console.log(mapData);
-    return;
+    // console.log(mapData);
+    // return;
     
     
 
@@ -396,9 +454,19 @@ const PopupForm = () => {
     XLSX.writeFile(workbook, "table_data.xlsx");
   };
 
+
+
   
-  const handleTogglePopup = () => {
-    setShowPopup(!showPopup);
+  const handleTogglePopup = (vehicalData) => {
+    alert('hello brohter');
+    if(vehicalData){
+      console.log(vehicalData);
+      const transformDatas=transformData(vehicalData);
+      console.log(transformDatas);
+      setFormData(transformDatas);
+      setEditVehicleData({...transformData});
+    }
+      setShowPopup(!showPopup);
   };
 
   
@@ -429,7 +497,7 @@ const PopupForm = () => {
           {/* <ExcelHeaderEditor/> */}
 
           <button
-            onClick={handleTogglePopup}
+            onClick={()=>handleTogglePopup('')}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex-shrink-0"
           >
             Open Form
@@ -450,7 +518,12 @@ const PopupForm = () => {
         onFilterChange={updateFilter}
       />
 
-      <VehicleTable vehicleData={filteredData} togglePopup={togglePopup} />
+      <VehicleTable 
+      vehicleData={filteredData} 
+      togglePopup={togglePopup} 
+      handleDelete={handleDelete}
+      handleTogglePopup={handleTogglePopup}
+       />
       {/* Table */}
 
       {/* Popup Form */}
@@ -470,6 +543,7 @@ const PopupForm = () => {
             handleVasChange={handleVasChange}
             handleDeleteAcc={handleDeleteAcc} 
             handleDeleteVas={handleDeleteVas}
+            handleDelete={handleDelete}
           />
         </div>
       )}
