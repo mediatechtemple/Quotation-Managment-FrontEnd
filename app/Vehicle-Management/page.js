@@ -27,6 +27,7 @@ const PopupForm = () => {
   const [accCount, setAccCount] = useState(1);
   const [vasCount, setVasCount] = useState(1);
 
+ 
 
   const [formData, setFormData] = useState({
     Manufacturing_Year: "1100",
@@ -135,6 +136,7 @@ const PopupForm = () => {
 
   // Handle input changes
   const handleInputChange = (fieldKey, value) => {
+ 
     setFormData({
       ...formData,
       insurance_details: {
@@ -269,9 +271,6 @@ const PopupForm = () => {
   };
 
 
-  const handleEdit =async (item)=>{
-
-  }
 
 
 
@@ -460,6 +459,9 @@ const PopupForm = () => {
   const handleTogglePopup = (vehicalData) => {
     alert('hello brohter');
     if(vehicalData){
+      setFieldCount(vehicalData.insurances.length);
+      setAccCount(vehicalData.accessories.length);
+      setVasCount(vehicalData.vas.length);
       console.log(vehicalData);
       const transformDatas=transformData(vehicalData);
       console.log(transformDatas);

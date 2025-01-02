@@ -58,14 +58,14 @@ const VehicalForm = ({
         <input
           type="text"
           placeholder="Colour"
-          value={formData.color}
+          value={formData.color }
           onChange={(e) => onFieldChange("color", e.target.value)}
           className="border p-2 rounded w-full"
         />
         <input
           type="number"
           placeholder="Ex Showroom Price"
-          value={formData.Ex_Showroom_Price}
+          value={formData.Ex_Showroom_Price || ""}
           onChange={(e) =>
             onFieldChange("Ex_Showroom_Price", e.target.value)
           }
@@ -135,13 +135,13 @@ const VehicalForm = ({
           onChange={(e) => onFieldChange("RT_TRC", e.target.value)}
           className="border p-2 rounded w-full"
         />
-        {/* <input
+        <input
           type="number"
           placeholder="Insurance"
           value={formData.insurance}
           onChange={(e) => onFieldChange("insurance", e.target.value)}
           className="border p-2 rounded w-full"
-        /> */}
+        />
         <input
           type="number"
           placeholder="Quantity"
@@ -182,14 +182,14 @@ const VehicalForm = ({
                 placeholder={`Insurance ${fieldNumber}`}
                 value={formData.insurance_details[key]}
                 onChange={(e) =>
-                  handleInputChange(key, e.target.value)
+                  handleInputChange(key, +e.target.value)
                 }
                 className="border py-1 rounded"
               />
               <input
                 type="number"
                 placeholder={`Price ${fieldNumber}`}
-                value={formData.insurance_details[aboutKey]}
+                value={formData.insurance_details[aboutKey] || ""}
                 onChange={(e) =>
                   handleInputChange(aboutKey, +e.target.value)
                 }
@@ -236,7 +236,7 @@ const VehicalForm = ({
               <input
                 type="number"
                 placeholder={`accessories_price ${fieldNumber}`}
-                value={formData.Accessories[aboutKey]}
+                value={formData.Accessories[aboutKey] || ""}
                 onChange={(e) =>
                   handleAccChange(aboutKey, +e.target.value)
                 }
@@ -282,7 +282,7 @@ const VehicalForm = ({
               <input
                 type="number"
                 placeholder={`VAS_price ${fieldNumber}`}
-                value={formData.VAS_data[aboutKey]}
+                value={formData.VAS_data[aboutKey] || ""}
                 onChange={(e) =>
                   handleVasChange(aboutKey, +e.target.value)
                 }
