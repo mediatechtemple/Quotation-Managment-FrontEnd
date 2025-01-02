@@ -386,7 +386,9 @@ const PopupForm = () => {
       insurance: "",
       quantity: "",
       color: "",
-      insurance_details: { insurance1: "", price1: "" }, // Reset insurance_details
+      insurance_details: { insurance1: "", price1: 0}, // Reset insurance_details
+      Accessories:{accessories_name1:'',accessories_price1:0},
+      VAS_data:{VAS_Name1:'',VAS_price1:0}
     });
     setShowPopup(false);
   };
@@ -457,7 +459,7 @@ const PopupForm = () => {
 
   
   const handleTogglePopup = (vehicalData) => {
-    alert('hello brohter');
+    // alert('hello brohter');
     if(vehicalData){
       setFieldCount(vehicalData.insurances.length);
       setAccCount(vehicalData.accessories.length);
