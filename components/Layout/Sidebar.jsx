@@ -2,10 +2,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaHome, FaAd, FaCar, FaBell, FaCogs, FaClipboard, FaUsers } from 'react-icons/fa'; // Icons import
+import Dropdown from './Dropdown';
 
 const Sidebar = ({ isSidebarOpen }) => {
   const pathname = usePathname(); // Get the current path
-  console.log(pathname);
+  // console.log(pathname);
+  const inputDropdownItems = [
+    { label: 'Fastag & TSC', path: 'Fastag_tsc' },
+    { label: 'HPN', path: 'HPN' },
+    { label: 'Scarf Certificate', path: 'Scarf-Certificate' },
+  ];
 
   return (
     <div
@@ -105,7 +111,16 @@ const Sidebar = ({ isSidebarOpen }) => {
             </span>
           </Link>
         </li>
-        <li>
+
+
+
+
+
+
+
+
+
+        {/* <li>
           <Link href="/Input">
             <span
               className={`flex items-center gap-2 px-2 py-1 rounded ${
@@ -117,7 +132,22 @@ const Sidebar = ({ isSidebarOpen }) => {
               <FaUsers /> Input
             </span>
           </Link>
-        </li>
+        </li> */}
+
+
+
+
+
+
+
+
+
+       
+        <Dropdown title="Input" items={inputDropdownItems} basePath="/Input" />
+
+
+
+
       </ul>
     </div>
   );
