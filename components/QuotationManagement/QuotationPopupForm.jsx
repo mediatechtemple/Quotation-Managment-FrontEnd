@@ -1,241 +1,270 @@
-'use client';
-import React from 'react';
+"use client";
+import React, { useEffect, useState } from "react";
+import Dropdown from "./QuotationInputs/Dropdown";
+import VariantDropdown from "./QuotationInputs/VariantDropdown";
+import ColorDropdown from "./QuotationInputs/ColorDropdown";
+import MultiSelectDropdown from "./QuotationInputs/MultiSelectDropdown";
+import AccMultiSelectDropdown from "./QuotationInputs/AccMultiSelectDropdown";
+import VasMultiSelectDropdown from "./QuotationInputs/VasMultiSelectDropdown";
+import Input from "./QuotationInputs/GeneralInput";
+import ScrafCertificate from "./QuotationInputs/ScrafCertificate";
+import NormalInput from "./QuotationInputs/NormalInput";
 
 const QuotationPopupForm = ({
   formData,
+  setFormData,
   handleChange,
   handleSubmit,
   closeModal,
+  dropdownOptions,
+  handleDropdownSelect,
+  variageDropDown,
+  handleDropdownVarientSelect,
+  variageColorDropDown,
+  handlerDropdownAllData,
+  allFiledCodeData,
+  hpnInputData,
+  handleHpnDropdownSelect,
 }) => {
+  const dropdownOptions1 = [
+    { value: "life", label: "Life Insurance" },
+    { value: "health", label: "Health Insurance" },
+    { value: "auto", label: "Auto Insurance" },
+    { value: "home", label: "Home Insurance" },
+    { value: "travel", label: "Travel Insurance" },
+    { value: "pet", label: "Pet Insurance" },
+    { value: "business", label: "Business Insurance" },
+    { value: "marine", label: "Marine Insurance" },
+    { value: "fire", label: "Fire Insurance" },
+    { value: "disability", label: "Disability Insurance" },
+    { value: "liability", label: "Liability Insurance" },
+    { value: "car", label: "Car Insurance" },
+    { value: "health2", label: "Health Insurance 2" },
+    // Add more options here if needed
+  ];
+  const [insuranceToggle, setInsuranceToggle] = useState(false);
+  const [HPNToggle, setHPNToggle] = useState(false);
+  const [exscToggle, setExScToggle] = useState(false);
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg w-3/4 max-w-2xl ">
-        <h2 className="text-2xl font-bold bg-yellow-500 text-white  text-center mb-4">New Quotation</h2>
+        <h2 className="text-2xl font-bold bg-yellow-500 text-white  text-center mb-4">
+          New Quotation
+        </h2>
         <form
           onSubmit={handleSubmit}
           className="space-y-4 overflow-y-auto max-h-[70vh] pr-4" // Add scrollable behavior
         >
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium">Model</label>
-              <input
-                type="text"
-                name="model"
-                value={formData.model}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Vehicle Model"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Fuel</label>
-              <input
-                type="text"
-                name="fuel"
-                value={formData.fuel}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Fuel Type"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Color</label>
-              <input
-                type="text"
-                name="color"
-                value={formData.color}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Vehicle Color"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Variant</label>
-              <input
-                type="text"
-                name="variant"
-                value={formData.variant}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Variant"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Ex-Showroom Price</label>
-              <input
-                type="number"
-                name="exShowroom"
-                value={formData.exShowroom}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Ex-Showroom Price"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Exchange Value</label>
-              <input
-                type="number"
-                name="exchange"
-                value={formData.exchange}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Exchange Value"
-              />
-            </div>
+          <Dropdown
+            options={dropdownOptions}
+            label="Choose an VSModal"
+            onSelect={handleDropdownSelect}
+          />
+
+          <VariantDropdown
+            options={variageDropDown}
+            label="Choose an Varient"
+            onSelect={handleDropdownVarientSelect}
+          />
+          <ColorDropdown
+            options={variageColorDropDown}
+            label="Choose an Color"
+            onSelect={handlerDropdownAllData}
+          />
+          <Input
+            label={"Fuel Type"}
+            name={"fuel_type"}
+            formData={formData}
+            setFormData={setFormData}
+          />
+          <Input
+            label={"Ex Showroom Price"}
+            name={"Ex_Showroom_Price"}
+            formData={formData}
+            setFormData={setFormData}
+          />
+
+          <div className="flex items-center space-x-4">
+            {/* <button
+              type="button"
+              className={`px-4 py-2 rounded ${
+                exscToggle ? "bg-green-500 text-white" : "bg-gray-200"
+              }`}
+              onClick={() => setExScToggle(true)}
+            >
+              Exchange
+            </button> */}
+            <button
+              type="button"
+              className={`px-4 py-2 rounded ${
+                !exscToggle ? "bg-green-500 text-white" : "bg-gray-200"
+              }`}
+              onClick={() => setExScToggle((item) => !item)}
+            >
+              Scrap Benifit
+            </button>
           </div>
-          <div>
-            <label className="block text-sm font-medium">Other Discount</label>
-            <input
-              type="number"
-              name="otherDiscount"
-              value={formData.otherDiscount}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Other Discount"
+
+          {!exscToggle && (
+            <Input
+              label={"scrap Amount"}
+              name={"scrap_benifit"}
+              formData={formData}
+              setFormData={setFormData}
+              symbol="₹"
             />
+          )}
+
+          <Input
+            label={"Additonal discount"}
+            name={"additional"}
+            formData={formData}
+            setFormData={setFormData}
+            symbol="₹"
+          />
+          <Input
+            label={"TCS"}
+            name={"TCS_price"}
+            formData={formData}
+            setFormData={setFormData}
+            percentage={"%"}
+          />
+
+          <Input
+            label={"Billing Price"}
+            name={"billing_price"}
+            formData={formData}
+            setFormData={setFormData}
+            symbol="₹"
+          />
+          <ScrafCertificate formData={formData} setFormData={setFormData} />
+
+          {/* <div>
+          <span>insurance</span>
+          <button
+          type="button"
+          onClick={()=>setInsuranceToggle(true)}
+          >All option</button>
+
+          <button
+           onClick={()=>setInsuranceToggle(false)}
+          type="button"
+          >
+            Nothing</button>
+        </div>
+          {insuranceToggle ? <MultiSelectDropdown
+            options={allFiledCodeData.insurances}
+            formData={formData}
+            setFormData={setFormData}
+          />:null} */}
+
+          {/* Insurance Section */}
+          <div className="flex items-center space-x-4">
+            <span className="font-semibold">Insurance:</span>
+            <button
+              type="button"
+              className={`px-4 py-2 rounded ${
+                insuranceToggle ? "bg-green-500 text-white" : "bg-gray-200"
+              }`}
+              onClick={() => setInsuranceToggle(true)}
+            >
+              Tata
+            </button>
+            <button
+              type="button"
+              className={`px-4 py-2 rounded ${
+                !insuranceToggle ? "bg-red-500 text-white" : "bg-gray-200"
+              }`}
+              onClick={() => setInsuranceToggle(false)}
+            >
+              Costomer
+            </button>
           </div>
-          <div>
-            <label className="block text-sm font-medium">Additional Discount</label>
-            <input
-              type="number"
-              name="additionalDiscount"
-              value={formData.additionalDiscount}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Additional Discount"
+
+          {insuranceToggle && (
+            <MultiSelectDropdown
+              options={allFiledCodeData.insurances}
+              formData={formData}
+              setFormData={setFormData}
             />
+          )}
+
+          <AccMultiSelectDropdown
+            options={allFiledCodeData.accessories}
+            formData={formData}
+            setFormData={setFormData}
+          />
+
+          <VasMultiSelectDropdown
+            options={allFiledCodeData.vas}
+            formData={formData}
+            setFormData={setFormData}
+          />
+
+          <Input
+            label={"Scrap Certificate"}
+            name={"Scrap_Certificate_price"}
+            formData={formData}
+            setFormData={setFormData}
+            symbol="₹"
+          />
+          <Input
+            label={"Fastag"}
+            name={"fastag_price"}
+            formData={formData}
+            setFormData={setFormData}
+            symbol="₹"
+          />
+
+          {/* <Dropdown
+            options={hpnInputData}
+            label="Choose an HPN"
+            onSelect={handleHpnDropdownSelect}
+          /> */}
+
+          <NormalInput
+            label={"Costumer Name"}
+            name={"customer_name"}
+            formData={formData}
+            setFormData={setFormData}
+          />
+          <NormalInput
+            label={"Customer Mobile No"}
+            name={"customer_mobile_no"}
+            formData={formData}
+            setFormData={setFormData}
+          />
+
+          <div className="flex items-center space-x-4">
+            <span className="font-semibold">Quatation for:</span>
+            <button
+              type="button"
+              className={`px-4 py-2 rounded ${
+                HPNToggle ? "bg-green-500 text-white" : "bg-gray-200"
+              }`}
+              onClick={() => setHPNToggle(false)}
+            >
+              general
+            </button>
+            <button
+              type="button"
+              className={`px-4 py-2 rounded ${
+                !HPNToggle ? "bg-red-500 text-white" : "bg-gray-200"
+              }`}
+              onClick={() => setHPNToggle(true)}
+            >
+              financer
+            </button>
           </div>
-          <div>
-            <label className="block text-sm font-medium">Billing Price</label>
-            <input
-              type="number"
-              name="billingPrice"
-              value={formData.billingPrice}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Billing Price"
+          {HPNToggle && (
+            <Dropdown
+              options={hpnInputData}
+              label="Choose an HPN"
+              onSelect={handleHpnDropdownSelect}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">TCS</label>
-            <input
-              type="number"
-              name="tcs"
-              value={formData.tcs}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="TCS"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Scrap Certificate</label>
-            <input
-              type="checkbox"
-              name="scrapCertificate"
-              checked={formData.scrapCertificate}
-              onChange={handleChange}
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">RTO</label>
-            <input
-              type="number"
-              name="rto"
-              value={formData.rto}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="RTO"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Insurance</label>
-            <input
-              type="number"
-              name="insurance"
-              value={formData.insurance}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Insurance"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Fastag</label>
-            <input
-              type="number"
-              name="fastag"
-              value={formData.fastag}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Fastag"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Accessories</label>
-            <input
-              type="text"
-              name="accessories"
-              value={formData.accessories}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Accessories"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Accessories Discount</label>
-            <input
-              type="number"
-              name="accessoriesDiscount"
-              value={formData.accessoriesDiscount}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Accessories Discount"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">VAS</label>
-            <input
-              type="text"
-              name="vas"
-              value={formData.vas}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="VAS"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Final Deal Amount</label>
-            <input
-              type="number"
-              name="finalDealAmount"
-              value={formData.finalDealAmount}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Final Deal Amount"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Customer Address</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Customer Address"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Hypothecation Number</label>
-            <input
-              type="text"
-              name="hpn"
-              value={formData.hpn}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Hypothecation Number"
-            />
-          </div>
+          )}
+
           <div className="text-right">
             <button
               type="button"

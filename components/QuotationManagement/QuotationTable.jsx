@@ -1,76 +1,271 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import QuotationTableWithPopup from "./QuotationTableWithPopup";
+import PopupTable from "./TablePopup/PopupTable";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import InsurancePopup from "./TablePopup/insurancePopup";
+import VasPopup from "./TablePopup/VasPopup";
 
-const QuotationTable = ({ submittedData }) => {
-  const tableHeaders = [
-    { key: "model", label: "Model", sortable: true },
-    { key: "fuel", label: "Fuel", sortable: true },
-    { key: "color", label: "Color", sortable: false },
-    { key: "variant", label: "Variant", sortable: true },
-    { key: "exShowroom", label: "Ex Showroom", sortable: true },
-    { key: "exchange", label: "Exchange", sortable: false },
-    { key: "otherDiscount", label: "Other Discount", sortable: true },
-    { key: "additionalDiscount", label: "Additional Discount", sortable: true },
-    { key: "billingPrice", label: "Billing Price", sortable: true },
-    { key: "tcs", label: "TCS", sortable: false },
-    { key: "scrapCertificate", label: "Scrap Certificate", sortable: false },
-    { key: "rto", label: "RTO", sortable: true },
-    { key: "insurance", label: "Insurance", sortable: true },
-    { key: "fastag", label: "Fastag", sortable: false },
-    { key: "accessories", label: "Accessories", sortable: true },
-    { key: "accessoriesDiscount", label: "Accessories Discount", sortable: false },
-    { key: "vas", label: "VAS", sortable: false },
-    { key: "finalDealAmount", label: "Final Deal Amount", sortable: true },
-    { key: "customerName", label: "Customer Name", sortable: true },
-    { key: "customerMobile", label: "Customer Mobile", sortable: false },
-    { key: "address", label: "Address", sortable: false },
-    { key: "hpn", label: "HPN", sortable: true },
-  ];
+const QuotationTable = ({ submittedData,loading,error,deleteQuotation}) => {
+  const [selectedData, setSelectedData] = useState(null); // State for selected object
+  const [selectedVasData, setSelecteVasdData] = useState(null); // State for selected object
+  const [selecteInsdData, setSelectedInsData] = useState(null); // State for selected object
+  const [showPopup, setShowPopup] = useState(false); // State to toggle popup
+  const [vasshowPopup, setVasShowPopup] = useState(false); // State to toggle popup
+  const [insShowPopup, setInsShowPopup] = useState(false); // State to toggle popup
+
+  // const [submittedData, setSubmittedData] = useState([]); // To store fetched data
+  // const [loading, setLoading] = useState(true); // To show loading state
+  // const [error, setError] = useState(null); // To handle errors
+
+  // Fetch data from API when the component mounts
   
+  
+  
+  // const deleteQuotation = async (id) => {
+  //   try {
+  //     const response = await fetch(`https://quotationlocal.onrender.com/api/quotation/${id}`, {
+  //       method: "DELETE",
+  //    });
+ 
+  //    if (response.ok) {
+  //      setQuotations((prevQuotations) =>
+  //        prevQuotations.filter((quotation) => quotation.id !== id)
+  //     );
+  //      alert("Quotation deleted successfully!");
+  //     } else {
+  //      alert("Failed to delete quotation.");
+  //     }
+  //   } catch (error) {
+  //     // console.error("Error deleting quotation:", error);
+  //     // alert("An error occurred while deleting the quotation.");
+  //     console.log(error);
+  //   }
+  // };
+  
+  
+ 
+
+
+  // Delete a quotation
+
+
+
+
+
+  if (loading) {
+    return <div>Loading...</div>; // Show loading while fetching
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>; // Show error if any occurs
+  }
+
+  const tableHeaders = [
+    { key: "createdAt", label: "Date", sortable: true },
+    { key: "customer_name", label: "Customer Name", sortable: true },
+    { key: "customer_mobile_no", label: "Customer Mobile No.", sortable: true },
+    { key: "modelnames", label: "Model", sortable: true },
+    { key: "fuel", label: "Fuel", sortable: true },
+    { key: "colorname", label: "Color", sortable: false },
+    { key: "variantname", label: "Variant", sortable: true },
+    { key: "Ex_Showroom_Price", label: "Ex Showroom", sortable: true },
+    { key: "accessories", label: "Accessories", sortable: false },
+    { key: "vas", label: "VAS", sortable: false },
+    { key: "insurances", label: "Insurances", sortable: false },
+    { key: "TCS_price", label: "TCS Price", sortable: true },
+    { key: "additional", label: "Additional", sortable: true },
+    { key: "billing_price", label: "Billing Price", sortable: true },
+    { key: "RTO_Normal", label: "RTO Normal", sortable: true },
+    { key: "RTO_Normal_scrap", label: "RTO Scrap", sortable: true },
+    { key: "fastag", label: "Fastag", sortable: true },
+    { key: "status", label: "Status", sortable: true },
+    { key: "HPN", label: "HPN", sortable: false },
+    { key: "address", label: "Address", sortable: false },
+    { key: "action", label: "Action", sortable: false },
+    // { key: "updatedAt", label: "Updated At", sortable: true },
+  ];
+
+  const handlePopupOpen = (data) => {
+    setSelectedData(data);
+    setShowPopup(true);
+  };
+  const handleVasOpen = (data) => {
+    setSelecteVasdData(data);
+    setVasShowPopup(true);
+  };
+  const handleInsPopupOpen = (data) => {
+    console.log(data);
+    setSelectedInsData(data);
+    setInsShowPopup(true);
+  };
+
+  const handlePopupClose = () => {
+    setShowPopup(false);
+    setSelectedData(null);
+  };
 
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full border-collapse border border-gray-300">
-      <thead>
-        <tr className="bg-yellow-500">
-          {tableHeaders.map((header, index) => (
-            <th key={index} className="border border-gray-300 px-4 text-white py-2">
-              {header.label}
-            </th>
-          ))}
-        </tr>
-      </thead>
-
+        <thead>
+          <tr className="bg-yellow-500">
+            {tableHeaders.map((header, index) => (
+              <th
+                key={index}
+                className="border border-gray-300 px-4 text-white py-2"
+              >
+                {header.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
         <tbody>
           {submittedData.map((data, index) => (
             <tr key={index}>
-              <td className="border border-gray-300 px-4 py-2">{data.model}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.fuel}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.color}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.variant}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.exShowroom}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.exchange}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.otherDiscount}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.additionalDiscount}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.billingPrice}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.tcs}</td>
+             
+               <td className="border border-gray-300 px-4 py-2">{new Date(data.createdAt).toLocaleDateString() || "N/A"}</td>
               <td className="border border-gray-300 px-4 py-2">
-                {data.scrapCertificate ? "Yes" : "No"}
+                {data.customer_name || "N/A"}
               </td>
-              <td className="border border-gray-300 px-4 py-2">{data.rto}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.insurance}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.fastag}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.accessories}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.accessoriesDiscount}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.vas}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.finalDealAmount}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.customerName}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.customerMobile}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.address}</td>
-              <td className="border border-gray-300 px-4 py-2">{data.hpn}</td>
+
+               <td className="border border-gray-300 px-4 py-2">
+                {data.customer_mobile_no || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.modelnames || "N/A"}
+              </td>
+          
+              <td className="border border-gray-300 px-4 py-2">
+                {data.fuel || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.colorname || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.variantname || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.Ex_Showroom_Price || "N/A"}
+              </td>
+              <td
+                className="border border-gray-300 px-4 py-2 text-blue-500 cursor-pointer"
+                onClick={() => handlePopupOpen(data.accessories)}
+              >
+                View Accessories
+              </td>
+              <td
+                className="border border-gray-300 px-4 py-2 text-blue-500 cursor-pointer"
+                onClick={() => handleVasOpen(data.vas)}
+              >
+                View VAS
+              </td>
+              <td
+                className="border border-gray-300 px-4 py-2 text-blue-500 cursor-pointer"
+                onClick={() => handleInsPopupOpen(data.insurances)}
+              >
+                View Insurances
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.TCS_price || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.additional || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.billing_price || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.RTO_Normal || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.RTO_Normal_scrap || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.fastag || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.status || "N/A"}
+              </td>
+             
+              <td className="border border-gray-300 px-4 py-2">
+                {data.HPN || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {data.address || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                <div className="flex">
+                  <button
+                    onClick={() => handleTogglePopup(vehicle)}
+                    className="text-green-500 hover:text-green-700 px-2"
+                    title="Edit"
+                  >
+                    <FaEdit size={20} />
+                  </button>
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => deleteQuotation(data.id)}
+                    className="text-red-500 hover:text-red-700 px-2"
+                    title="Delete"
+                  >
+                    <FaTrash size={20} />
+                  </button>
+                </div>
+              </td>
+                 {/* <td className="border border-gray-300 px-4 py-2">{new Date(data.updatedAt).toLocaleString() || "N/A"}</td> */}
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Popup for showing selected data */}
+      {/* {showPopup && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-1/2">
+            <h2 className="text-xl font-bold mb-4">Details</h2>
+            <table className="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border border-gray-300 px-4 py-2">Id</th>
+                  <th className="border border-gray-300 px-4 py-2">Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedData.map((item, index) => (
+                  <tr key={index}>
+                    <td className="border border-gray-300 px-4 py-2 ">
+                      {index + 1}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">{item}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button
+              onClick={handlePopupClose}
+              className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )} */}
+
+      <PopupTable
+        showPopup={showPopup}
+        selectedData={selectedData}
+        handlePopupClose={handlePopupClose}
+      />
+      <VasPopup
+        showPopup={vasshowPopup}
+        selectedData={selectedVasData}
+        handlePopupClose={handlePopupClose}
+      />
+      <InsurancePopup
+        showPopup={insShowPopup}
+        selectedData={selecteInsdData}
+        handlePopupClose={handlePopupClose}
+      />
     </div>
   );
 };
