@@ -9,6 +9,8 @@ import VasMultiSelectDropdown from "./QuotationInputs/VasMultiSelectDropdown";
 import Input from "./QuotationInputs/GeneralInput";
 import ScrafCertificate from "./QuotationInputs/ScrafCertificate";
 import NormalInput from "./QuotationInputs/NormalInput";
+import DownloadPdf from "./QuotationInputs/DownloadPdf";
+import DounloadPdfTable from "./QuotationInputs/DounloadPdfTable";
 
 const QuotationPopupForm = ({
   formData,
@@ -236,6 +238,14 @@ const QuotationPopupForm = ({
             setFormData={setFormData}
           />
 
+          <NormalInput
+            label={"Address"}
+            name={"address"}
+            type={"address"}
+            formData={formData}
+            setFormData={setFormData}
+          />
+
           <div className="flex items-center space-x-4">
             <span className="font-semibold">Quatation for:</span>
             <button
@@ -243,16 +253,29 @@ const QuotationPopupForm = ({
               className={`px-4 py-2 rounded ${
                 HPNToggle ? "bg-green-500 text-white" : "bg-gray-200"
               }`}
-              onClick={() => setHPNToggle(false)}
+              onClick={() => {
+                setHPNToggle(false);
+                setFormData((prevItem) => ({
+                  ...prevItem,
+                  QuotationType: "general",
+                }));
+              }}
             >
               general
             </button>
+
             <button
               type="button"
               className={`px-4 py-2 rounded ${
                 !HPNToggle ? "bg-red-500 text-white" : "bg-gray-200"
               }`}
-              onClick={() => setHPNToggle(true)}
+              onClick={() => {
+                setHPNToggle(true);
+                setFormData((prevItem) => ({
+                  ...prevItem,
+                  QuotationType: "financer",
+                }));
+              }}
             >
               financer
             </button>
@@ -264,6 +287,9 @@ const QuotationPopupForm = ({
               onSelect={handleHpnDropdownSelect}
             />
           )}
+          {/* <DownloadPdf /> */}
+
+          <DounloadPdfTable formData={formData} />
 
           <div className="text-right">
             <button

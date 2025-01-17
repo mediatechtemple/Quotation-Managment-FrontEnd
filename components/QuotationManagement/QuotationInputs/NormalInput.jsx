@@ -6,7 +6,7 @@ const NormalInput = ({ label, name, type = "text", formData, setFormData }) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value.trim(), // Removes unnecessary spaces
+      [name]: value, // Removes unnecessary spaces
     }));
   };
 

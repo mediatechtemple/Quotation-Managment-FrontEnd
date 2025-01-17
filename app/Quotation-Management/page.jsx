@@ -152,6 +152,8 @@ const QuotationForm = () => {
           customerName: "",
           customerMobile: "",
           address: "",
+          QuotationType:"",
+          address:""
         });
         setShowModal(false); // Close the modal
         fetchData();
@@ -166,6 +168,37 @@ const QuotationForm = () => {
       alert("An error occurred. Please try again later.");
     }
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
  
   const handleDropdownSelect = (value) => {
