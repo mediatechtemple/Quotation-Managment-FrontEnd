@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import QuotationTableWithPopup from "./QuotationTableWithPopup";
 import PopupTable from "./TablePopup/PopupTable";
 import { FaEdit, FaTelegramPlane, FaTrash, FaWhatsapp } from "react-icons/fa";
-import InsurancePopup from "./TablePopup/insurancePopup";
+import InsurancePopup from "./TablePopup/InsurancePopup";
 import VasPopup from "./TablePopup/VasPopup";
 
 const QuotationTable = ({ submittedData, loading, error, deleteQuotation }) => {
